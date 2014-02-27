@@ -291,10 +291,7 @@ ex_writefp(SCR *sp, char *name, FILE *fp, MARK *fm, MARK *tm, u_long *nlno, u_lo
 	recno_t fline, tline, lcnt;
 	size_t len;
 	int rval;
-	char *msg;
-	CHAR_T *p;
-	char *f;
-	size_t flen;
+	char *msg, *p;
 	int isutf16;
 
 	gp = sp->gp;
@@ -346,10 +343,9 @@ ex_writefp(SCR *sp, char *name, FILE *fp, MARK *fm, MARK *tm, u_long *nlno, u_lo
 					msg = NULL;
 				}
 			}
-			if (db_get(sp, fline, DBG_FATAL, &p, &len))
+			if (db_rget(sp, fline, &p, &len))
 				goto err;
-			INT2FILE(sp, p, len, f, flen);
-			if (fwrite(f, 1, flen, fp) != flen)
+			if (fwrite(p, 1, len, fp) != len)
 				goto err;
 			ccnt += len;
 			/* UTF-16 w/o BOM is big-endian */
