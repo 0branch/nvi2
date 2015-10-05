@@ -197,6 +197,15 @@ v_chT(SCR *sp, VICMD *vp)
 		return (1);
 
 	/*
+	 * If the matching character is immediately to the left of the
+	 * original cursor position, prevent movement.
+	 */
+	if (vp->m_start.cno == vp->m_stop.cno) {
+                notfound(sp, vp->character);
+                return (1);
+	}
+
+	/*
 	 * v_chF places the cursor on the character, where the 'T'
 	 * command wants it to its right.  We know this is safe since
 	 * we had to move left for v_chF() to have succeeded.
